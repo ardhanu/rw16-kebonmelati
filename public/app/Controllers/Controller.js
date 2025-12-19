@@ -47,7 +47,42 @@ export default class Controller {
      * Called after view is detected and injected.
      * Use this to attach event listeners.
      */
-    afterRender() {}
+    afterRender() {
+        this.setupScrollAnimations();
+    }
+
+    /**
+     * Setup Intersection Observer for scroll animations
+     */
+    setupScrollAnimations() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Trigger animation
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1, // Trigger when 10% visible
+            rootMargin: '0px 0px -50px 0px' // Offset slightly so it triggers before bottom
+        });
+
+        // Find elements and set initial state
+        const elements = this.appElement.querySelectorAll('.scroll-reveal');
+        elements.forEach((el, index) => {
+            // Initial State (Hidden)
+            el.classList.add('transform', 'opacity-0', 'translate-y-10', 'transition-all', 'duration-700', 'ease-out');
+            
+            // Stagger delay if defined (optional)
+            if (el.dataset.delay) {
+                el.style.transitionDelay = `${el.dataset.delay}ms`;
+            }
+
+            observer.observe(el);
+        });
+    }
 
     /**
      * Cleanup before leaving the page.
