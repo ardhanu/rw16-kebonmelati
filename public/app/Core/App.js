@@ -6,7 +6,7 @@ class App {
             { path: '/', controller: 'HomeController' },
             { path: '/about', controller: 'AboutController' },
             { path: '/services', controller: 'LayananController' },
-            { path: '/portfolio', controller: 'KegiatanController' },
+            { path: '/kegiatan', controller: 'KegiatanController' },
             { path: '/contact', controller: 'ContactController' }
         ];
 
