@@ -35,9 +35,23 @@ export default class Router {
         
         if (!route) {
             console.error('No route found for', path);
-            document.getElementById('app').innerHTML = '<h1>404 - Page Not Found</h1>';
+            document.title = '404 Not Found';
+            document.getElementById('app').innerHTML = `
+                <div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+                    <span class="material-symbols-outlined text-9xl text-gray-300 mb-4">sentiment_dissatisfied</span>
+                    <h1 class="text-4xl font-extrabold text-primary mb-2">Halaman Tidak Ditemukan</h1>
+                    <p class="text-gray-500 mb-8 max-w-md">Maaf, halaman yang Anda cari mungkin telah dipindahkan atau tidak tersedia.</p>
+                    <a href="/" data-link class="px-8 py-3 bg-accent hover:bg-accent-hover text-white font-bold rounded-full shadow-lg transition-transform hover:-translate-y-1">
+                        Kembali ke Beranda
+                    </a>
+                </div>
+            `;
             return;
         }
+
+        // Update Document Title
+        const appTitle = 'RW 16 Kebon Melati';
+        document.title = route.title ? `${route.title} | ${appTitle}` : appTitle;
 
         // Clean up previous controller if necessary
         if (this.currentController && typeof this.currentController.onDestroy === 'function') {

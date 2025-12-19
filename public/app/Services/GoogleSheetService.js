@@ -5,11 +5,29 @@ export default class GoogleSheetService {
      * Fetch data from Google Sheets
      * Uses the 'gviz' visualization API to get JSON data.
      */
+    static CACHE_KEY = 'rw16_sheet_data';
+    static CACHE_DURATION = 10 * 60 * 1000; // 10 Minutes in milliseconds
+
+    /**
+     * Fetch data with Smart Caching
+     */
     static async getKegiatan() {
+        // 1. Check Cache
+        const cached = this.getFromCache();
+        if (cached) {
+            console.log("[GSheets] Returning cached data");
+            return cached;
+        }
+
+        // 2. Fetch from Network
         if (CONFIG.useCMS && CONFIG.googleSheet.sheetID) {
             try {
-                console.log("[GSheets] Fetching data from Google Sheets...");
-                return await this.fetchFromSheet();
+                console.log("[GSheets] Cache expired/empty. Fetching from API...");
+                const data = await this.fetchFromSheet();
+                
+                // 3. Save to Cache
+                this.saveToCache(data);
+                return data;
             } catch (error) {
                 console.error("[GSheets] API Error, using fallback:", error);
                 return await this.fetchLocalFallback();
@@ -20,9 +38,35 @@ export default class GoogleSheetService {
         }
     }
 
+    static getFromCache() {
+        try {
+            const record = JSON.parse(localStorage.getItem(this.CACHE_KEY));
+            if (!record) return null;
+
+            if (Date.now() - record.timestamp < this.CACHE_DURATION) {
+                return record.data;
+            }
+            return null; // Expired
+        } catch (e) {
+            return null;
+        }
+    }
+
+    static saveToCache(data) {
+        try {
+            const record = {
+                timestamp: Date.now(),
+                data: data
+            };
+            localStorage.setItem(this.CACHE_KEY, JSON.stringify(record));
+        } catch (e) {
+            console.warn("Storage full or disabled");
+        }
+    }
+
     static async fetchFromSheet() {
         const SHEET_ID = CONFIG.googleSheet.sheetID;
-        // Add cache buster to avoid stale data
+        // Use t=${Date.now()} to prevent browser-level caching of the fetch request itself
         const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`;
 
         const response = await fetch(URL);

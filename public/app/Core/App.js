@@ -3,11 +3,11 @@ import Router from './Router.js';
 class App {
     constructor() {
         this.routes = [
-            { path: '/', controller: 'HomeController' },
-            { path: '/about', controller: 'AboutController' },
-            { path: '/services', controller: 'LayananController' },
-            { path: '/kegiatan', controller: 'KegiatanController' },
-            { path: '/contact', controller: 'ContactController' }
+            { path: '/', controller: 'HomeController', title: 'Beranda' },
+            { path: '/about', controller: 'AboutController', title: 'Profil Wilayah' },
+            { path: '/services', controller: 'LayananController', title: 'Layanan Warga' },
+            { path: '/kegiatan', controller: 'KegiatanController', title: 'Galeri Kegiatan' },
+            { path: '/contact', controller: 'ContactController', title: 'Hubungi Kami' }
         ];
 
         this.router = new Router(this.routes);
