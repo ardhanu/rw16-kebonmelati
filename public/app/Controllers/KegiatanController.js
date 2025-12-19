@@ -8,7 +8,10 @@ export default class KegiatanController extends Controller {
     }
 
     async render() {
-        const urlParams = new URLSearchParams(window.location.search);
+        // Parse ID from Hash URL (e.g., #/portfolio?id=1)
+        const hash = window.location.hash;
+        const queryString = hash.split('?')[1];
+        const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get('id');
 
         if (id) {

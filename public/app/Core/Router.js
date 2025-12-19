@@ -26,7 +26,11 @@ export default class Router {
 
     async handleRoute() {
         // Get path from hash (remove #) or default to /
-        const path = window.location.hash.slice(1) || '/';
+        const fullPath = window.location.hash.slice(1) || '/';
+        
+        // Split path and query params because we need to match only the path part
+        const [path, queryString] = fullPath.split('?');
+        
         const route = this.matchRoute(path);
         
         if (!route) {
@@ -46,6 +50,7 @@ export default class Router {
             const ControllerClass = module.default;
             
             this.currentController = new ControllerClass();
+            // Pass query params if needed, though controllers checks window.location
             await this.currentController.render();
         } catch (error) {
             console.error('Error loading controller:', error);
@@ -54,9 +59,7 @@ export default class Router {
     }
 
     matchRoute(path) {
-        // Simple matching for now, can be expanded to Regex
-        // Handling base path if served from subdirectory might be needed later
-        // For now, assume root or exact match
-        return this.routes.find(r => r.path === path) || this.routes.find(r => r.path === '/'); // Fallback to home
+        // Match exact path ignoring query params
+        return this.routes.find(r => r.path === path) || this.routes.find(r => r.path === '/');
     }
 }
