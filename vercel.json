@@ -1,8 +1,7 @@
 {
+  "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/public/assets/$1" },
-    { "source": "/data/(.*)", "destination": "/public/data/$1" },
-    { "source": "/((?!app/|public/).*)", "destination": "/public/index.html" }
+    { "source": "/((?!app/|assets/|data/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
