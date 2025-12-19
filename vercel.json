@@ -3,6 +3,7 @@
   "rewrites": [
     { "source": "/assets/(.*)", "destination": "/public/assets/$1" },
     { "source": "/data/(.*)", "destination": "/public/data/$1" },
+    { "source": "/app/(.*)", "destination": "/app/$1" },
     { "source": "/((?!app/|public/).*)", "destination": "/public/index.html" }
   ],
   "headers": [
