@@ -33,9 +33,21 @@
     <meta property="twitter:description" content="Pusat informasi dan layanan digital warga RW 16 Kebon Melati.">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        /* Scroll Progress Bar */
+        #scroll-progress { width: 0%; height: 4px; background: #2563EB; position: fixed; top: 0; left: 0; z-index: 100; transition: width 0.1s; }
+        /* Skeleton Animation */
+        .skeleton { @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded; }
+    </style>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Scroll Progress Bar */
+        #scroll-progress { width: 0%; height: 4px; background: #2563EB; position: fixed; top: 0; left: 0; z-index: 100; transition: width 0.1s; }
+        /* Skeleton Animation */
+        .skeleton { @apply animate-pulse bg-gray-200 rounded; }
     </style>
 </head>
-<body class="bg-neutral-bg text-neutral-text-main min-h-screen flex flex-col">
+<body class="bg-neutral-bg text-neutral-text-main min-h-screen flex flex-col transition-colors duration-300 pb-20 md:pb-0">
+    <div id="scroll-progress"></div>
     <nav class="bg-primary shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
@@ -46,7 +58,7 @@
                 </div>
                 
                 <!-- Desktop Menu -->
-                <div class="hidden md:ml-6 md:flex md:space-x-8 items-center">
+                <div class="hidden md:flex md:ml-6 md:space-x-8 items-center">
                     <a href="/" data-link class="text-gray-200 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all">Beranda</a>
                     <a href="/about" data-link class="text-gray-200 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all">Profil</a>
                     <a href="/services" data-link class="text-gray-200 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-all">Layanan</a>
@@ -76,10 +88,19 @@
         </div>
     </nav>
 
+
     <main id="app" class="flex-grow transition-opacity duration-300 ease-in-out opacity-100">
         <!-- Views will be rendered here -->
-        <div class="flex items-center justify-center h-96">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+        <!-- Skeleton Loading State -->
+        <div class="space-y-8 p-4 max-w-7xl mx-auto w-full animate-pulse">
+            <!-- Hero Skeleton -->
+            <div class="h-64 md:h-96 bg-gray-200 dark:bg-gray-800 rounded-2xl w-full mb-8"></div>
+            <!-- Grid Skeleton -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+                <div class="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+                <div class="h-48 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+            </div>
         </div>
     </main>
 
@@ -158,5 +179,14 @@
     </footer>
 
     <script type="module" src="./app/Core/App.js"></script>
+    <script>
+        // Scroll Progress Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        });
+    </script>
 </body>
 </html>
