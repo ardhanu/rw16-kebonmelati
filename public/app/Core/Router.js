@@ -8,25 +8,25 @@ export default class Router {
         this.currentController = null;
         
         // Handle navigation events
-        window.addEventListener('popstate', () => this.handleRoute());
+        window.addEventListener('hashchange', () => this.handleRoute());
         
         // Intercept link clicks for SPA feel
         document.body.addEventListener('click', e => {
             const link = e.target.closest('[data-link]');
             if (link) {
                 e.preventDefault();
-                this.navigateTo(link.href);
+                this.navigateTo(link.getAttribute('href'));
             }
         });
     }
 
     navigateTo(url) {
-        window.history.pushState(null, null, url);
-        this.handleRoute();
+        window.location.hash = url;
     }
 
     async handleRoute() {
-        const path = window.location.pathname;
+        // Get path from hash (remove #) or default to /
+        const path = window.location.hash.slice(1) || '/';
         const route = this.matchRoute(path);
         
         if (!route) {

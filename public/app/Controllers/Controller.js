@@ -14,7 +14,7 @@ export default class Controller {
      */
     async renderView(viewName, data = {}) {
         try {
-            const response = await fetch(`../app/Views/${viewName}.html?t=${new Date().getTime()}`);
+            const response = await fetch(`./app/Views/${viewName}.html?t=${new Date().getTime()}`);
             if (!response.ok) throw new Error('View not found');
             
             const html = await response.text();
