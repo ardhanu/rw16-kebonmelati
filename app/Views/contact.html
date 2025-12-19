@@ -1,0 +1,71 @@
+<div class="bg-neutral-soft min-h-screen py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl font-extrabold text-primary mb-4">Hubungi Sekretariat</h1>
+            <p class="text-xl text-gray-600">Sampaikan aspirasi, aduan, atau kebutuhan administrasi Anda.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Info -->
+            <div class="space-y-8">
+                <div class="bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold text-primary mb-4">Informasi Kontak</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="font-bold w-24 text-gray-500">Alamat:</span>
+                            <p id="contact-address" class="text-gray-800 font-medium"></p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="font-bold w-24 text-gray-500">Email:</span>
+                            <p id="contact-email" class="text-accent font-medium"></p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="font-bold w-24 text-gray-500">Telepon:</span>
+                            <p id="contact-phone" class="text-gray-800 font-medium"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-primary text-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Jam Pelayanan</h3>
+                    <ul class="space-y-2 text-blue-200">
+                        <li class="flex justify-between"><span>Senin - Jumat</span> <span>08:00 - 16:00</span></li>
+                        <li class="flex justify-between"><span>Sabtu</span> <span>09:00 - 12:00</span></li>
+                        <li class="flex justify-between"><span>Minggu</span> <span>Libur / Kondisional</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-bold text-primary mb-6">Formulir Aspirasi Warga</h3>
+                <form onsubmit="event.preventDefault(); alert('Aspirasi telah terkirim!');" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors" placeholder="Bpk. Budi Santoso">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
+                        <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors" placeholder="0812...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors">
+                            <option>Administrasi Surat</option>
+                            <option>Laporan Keamanan</option>
+                            <option>Usulan Pembangunan</option>
+                            <option>Lainnya</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pesan / Detail</label>
+                        <textarea rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors" placeholder="Tulis pesan anda disini..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-accent hover:bg-accent-hover text-white font-bold rounded-lg shadow transition-all transform hover:-translate-y-1">
+                        Kirim Pesan
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
