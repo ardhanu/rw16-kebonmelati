@@ -17,6 +17,17 @@ export default class KegiatanController extends Controller {
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
 
+    // Fetch projects first to handle notifications
+    this.projects = await this.model.getAllProjects();
+    this.projects.reverse(); // Standardize order
+
+    // Update Read Status (Clear Notification)
+    if (this.projects.length > 0) {
+      localStorage.setItem("last_kegiatan_count", this.projects.length);
+      const badges = document.querySelectorAll(".badge-dot");
+      badges.forEach((b) => b.remove());
+    }
+
     if (id) {
       await this.renderDetail(id);
     } else {
@@ -25,22 +36,6 @@ export default class KegiatanController extends Controller {
   }
 
   async renderList() {
-    this.projects = await this.model.getAllProjects(); // Store globally
-
-    // Sort by Date (Newest First) - Assuming date format "DD Month YYYY" or ISO
-    // Simple string sort might not work if format is "10 Januari 2025".
-    // For now, we assume the data coming from Sheet is somewhat sortable or relies on Sheet order (usually newest bottom).
-    // If sheet is newest bottom, we reverse. If user said newest top, we trust array.
-    // Let's explicitly reverse to show newest first (assuming sheet adds to bottom).
-    this.projects.reverse();
-
-    // Update Read Status
-    if (this.projects.length > 0) {
-      localStorage.setItem("last_kegiatan_count", this.projects.length);
-      const badges = document.querySelectorAll(".badge-dot");
-      badges.forEach((b) => b.remove());
-    }
-
     await this.renderView("portfolio");
     this.applyFiltersAndSearch();
     this.setupControls();
