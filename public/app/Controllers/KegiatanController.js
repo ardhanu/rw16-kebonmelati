@@ -5,6 +5,9 @@ export default class KegiatanController extends Controller {
   constructor() {
     super();
     this.model = new KegiatanModel();
+    this.searchQuery = "";
+    this.activeFilter = "all";
+    this.projects = [];
   }
 
   async render() {
@@ -24,43 +27,80 @@ export default class KegiatanController extends Controller {
   async renderList() {
     this.projects = await this.model.getAllProjects(); // Store globally
 
+    // Sort by Date (Newest First) - Assuming date format "DD Month YYYY" or ISO
+    // Simple string sort might not work if format is "10 Januari 2025".
+    // For now, we assume the data coming from Sheet is somewhat sortable or relies on Sheet order (usually newest bottom).
+    // If sheet is newest bottom, we reverse. If user said newest top, we trust array.
+    // Let's explicitly reverse to show newest first (assuming sheet adds to bottom).
+    this.projects.reverse();
+
     // Update Read Status
     if (this.projects.length > 0) {
       localStorage.setItem("last_kegiatan_count", this.projects.length);
-      // Optionally remove badge immediately from UI if visible
       const badges = document.querySelectorAll(".badge-dot");
       badges.forEach((b) => b.remove());
     }
 
     await this.renderView("portfolio");
-    this.bindListData(this.projects);
-    this.setupFilters();
+    this.applyFiltersAndSearch();
+    this.setupControls();
   }
 
-  setupFilters() {
+  setupControls() {
+    // Search
+    const searchInput = document.getElementById("param-search");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        this.searchQuery = e.target.value.toLowerCase();
+        this.applyFiltersAndSearch();
+      });
+    }
+
+    // Filters
     const buttons = document.querySelectorAll(".filter-btn");
     buttons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        // Update Active State
+        // Update State
+        this.activeFilter = btn.getAttribute("data-filter");
+
+        // Update UI Buttons
         buttons.forEach((b) => {
           b.className =
-            "filter-btn px-6 py-2 bg-white text-gray-600 rounded-full font-medium hover:bg-gray-100 transition-all border border-gray-200 hover:scale-105 cursor-pointer";
+            "filter-btn px-6 py-2.5 bg-white text-gray-600 rounded-full font-medium hover:bg-gray-50 transition-all border border-gray-200 hover:border-accent/50 hover:text-accent hover:scale-105 active:scale-95 shadow-sm cursor-pointer";
         });
         btn.className =
-          "filter-btn px-6 py-2 bg-accent text-white rounded-full font-semibold shadow-md transition-all hover:scale-105 cursor-pointer";
+          "filter-btn px-6 py-2.5 bg-accent text-white rounded-full font-semibold shadow-lg shadow-accent/30 transition-all hover:scale-105 active:scale-95 cursor-pointer";
 
-        // Filter Data
-        const category = btn.getAttribute("data-filter");
-        if (category === "all") {
-          this.bindListData(this.projects);
-        } else {
-          const filtered = this.projects.filter(
-            (p) => p.category.toLowerCase() === category.toLowerCase()
-          );
-          this.bindListData(filtered);
-        }
+        this.applyFiltersAndSearch();
       });
+      // Set initial active state for filters
+      if (btn.getAttribute("data-filter") === this.activeFilter) {
+        btn.className =
+          "filter-btn px-6 py-2.5 bg-accent text-white rounded-full font-semibold shadow-lg shadow-accent/30 transition-all hover:scale-105 active:scale-95 cursor-pointer";
+      }
     });
+  }
+
+  applyFiltersAndSearch() {
+    let filtered = this.projects;
+
+    // 1. Filter by Category
+    if (this.activeFilter !== "all") {
+      filtered = filtered.filter(
+        (p) => p.category.toLowerCase() === this.activeFilter.toLowerCase()
+      );
+    }
+
+    // 2. Filter by Search
+    if (this.searchQuery) {
+      filtered = filtered.filter(
+        (p) =>
+          p.title.toLowerCase().includes(this.searchQuery) ||
+          p.description.toLowerCase().includes(this.searchQuery)
+      );
+    }
+
+    this.bindListData(filtered);
   }
 
   async renderDetail(id) {
@@ -139,69 +179,77 @@ export default class KegiatanController extends Controller {
 
   bindListData(projects) {
     const list = document.getElementById("projects-list");
-    if (list) {
-      list.innerHTML = projects
-        .map(
-          (p) => `
-                 <div class="group relative overflow-hidden rounded-xl shadow-lg bg-gray-900 border border-gray-100 flex flex-col h-full">
-                    <!-- Image Carousel -->
-                    <div class="aspect-video bg-neutral-200 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide relative shrink-0">
-                        ${
-                          p.images && p.images.length > 0
-                            ? p.images
-                                .map(
-                                  (img) => `
-                                <div class="min-w-full h-full snap-center relative">
-                                    <img src="${img}" alt="${p.title}" class="w-full h-full object-cover">
-                                </div>
-                            `
-                                )
-                                .join("")
-                            : `<div class="min-w-full h-full flex items-center justify-center">
-                                <span class="material-symbols-outlined text-6xl text-gray-400">image</span>
-                             </div>`
-                        }
-                        
-                        <!-- Image Badge -->
-                        ${
-                          p.images && p.images.length > 1
-                            ? `
-                            <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-                                <span class="material-symbols-outlined text-[10px] align-middle mr-1">photo_library</span>
-                                ${p.images.length} Foto
+    if (!list) return;
+
+    // Reset class to Grid just in case it was changed
+    list.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8";
+
+    if (projects.length === 0) {
+      list.innerHTML = `<div class="col-span-full py-12 text-center text-gray-400">Tidak ada kegiatan yang ditemukan.</div>`;
+      return;
+    }
+
+    list.innerHTML = projects
+      .map(
+        (p) => `
+             <div class="group relative overflow-hidden rounded-xl shadow-lg bg-gray-900 border border-gray-100 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                <!-- Image Carousel -->
+                <div class="aspect-video bg-neutral-200 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide relative shrink-0">
+                    ${
+                      p.images && p.images.length > 0
+                        ? p.images
+                            .map(
+                              (img) => `
+                            <div class="min-w-full h-full snap-center relative">
+                                <img src="${img}" alt="${p.title}" class="w-full h-full object-cover">
                             </div>
                         `
-                            : ""
-                        }
-                    </div>
+                            )
+                            .join("")
+                        : `<div class="min-w-full h-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-gray-400">image</span>
+                         </div>`
+                    }
                     
-                    <div class="p-6 bg-white flex flex-col grow">
-                        <div class="flex justify-between items-start mb-2">
-                             <span class="inline-block px-3 py-1 bg-blue-100 text-accent text-xs font-bold rounded-full">${
-                               p.category
-                             }</span>
-                             <span class="text-xs text-gray-500 font-medium">${
-                               p.date
-                             }</span>
+                    <!-- Image Badge -->
+                    ${
+                      p.images && p.images.length > 1
+                        ? `
+                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                            <span class="material-symbols-outlined text-[10px] align-middle mr-1">photo_library</span>
+                            ${p.images.length} Foto
                         </div>
-                       
-                        <h3 class="text-xl font-bold text-primary mb-2 group-hover:text-accent transition-colors line-clamp-2">${
-                          p.title
-                        }</h3>
-                        <p class="text-gray-600 text-sm line-clamp-2 mb-4 grow">${
-                          p.description
-                        }</p>
-                        
-                        <a href="/portfolio?id=${
-                          p.id
-                        }" data-link class="inline-block text-center w-full py-2 rounded-lg border border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors">
-                            Lihat Detail
-                        </a>
-                    </div>
+                    `
+                        : ""
+                    }
                 </div>
-            `
-        )
-        .join("");
-    }
+                
+                <div class="p-6 bg-white flex flex-col grow">
+                    <div class="flex justify-between items-start mb-2">
+                         <span class="inline-block px-3 py-1 bg-blue-100 text-accent text-xs font-bold rounded-full">${
+                           p.category
+                         }</span>
+                         <span class="text-xs text-gray-500 font-medium">${
+                           p.date
+                         }</span>
+                    </div>
+                   
+                    <h3 class="text-xl font-bold text-primary mb-2 group-hover:text-accent transition-colors line-clamp-2">${
+                      p.title
+                    }</h3>
+                    <p class="text-gray-600 text-sm line-clamp-2 mb-4 grow">${
+                      p.description
+                    }</p>
+                    
+                    <a href="/portfolio?id=${
+                      p.id
+                    }" data-link class="inline-block text-center w-full py-2 rounded-lg border border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors">
+                        Lihat Detail
+                    </a>
+                </div>
+            </div>
+        `
+      )
+      .join("");
   }
 }
