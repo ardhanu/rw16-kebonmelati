@@ -18,8 +18,8 @@ export default class KegiatanController extends Controller {
     const id = urlParams.get("id");
 
     // Fetch projects first to handle notifications
-    this.projects = await this.model.getAllProjects();
-    this.projects.reverse(); // Standardize order
+    const rawProjects = await this.model.getAllProjects();
+    this.projects = [...rawProjects].reverse(); // Create copy and reverse to ensure Newest First
 
     // Update Read Status (Clear Notification)
     if (this.projects.length > 0) {
