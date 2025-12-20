@@ -1,83 +1,157 @@
 <div class="bg-neutral-soft min-h-screen py-16">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h1 class="text-4xl font-extrabold text-primary mb-4">Hubungi Sekretariat</h1>
-            <p class="text-xl text-gray-600">Sampaikan aspirasi, aduan, atau kebutuhan administrasi Anda.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Contact Info -->
-            <div class="space-y-8">
-                <div class="bg-white p-8 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold text-primary mb-4">Informasi Kontak</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <span class="font-bold w-24 text-gray-500">Alamat:</span>
-                            <p id="contact-address" class="text-gray-800 font-medium"></p>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="font-bold w-24 text-gray-500">Email:</span>
-                            <p id="contact-email" class="text-accent font-medium"></p>
-                        </div>
-                        <div class="flex items-start">
-                            <span class="font-bold w-24 text-gray-500">Telepon:</span>
-                            <p id="contact-phone" class="text-gray-800 font-medium"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-primary text-white p-8 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold mb-4">Jam Pelayanan</h3>
-                    <ul class="space-y-2 text-blue-200">
-                        <li class="flex justify-between"><span>Senin - Jumat</span> <span>08:00 - 16:00</span></li>
-                        <li class="flex justify-between"><span>Sabtu</span> <span>09:00 - 12:00</span></li>
-                        <li class="flex justify-between"><span>Minggu</span> <span>Libur / Kondisional</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Contact Form -->
-            <div class="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-accent/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-accent/20 transition-all"></div>
-                
-                <h3 class="text-2xl font-bold text-primary mb-6 relative z-10 border-l-4 border-accent pl-4">Formulir Aspirasi Warga</h3>
-                <form id="aspiration-form" class="space-y-6 relative z-10">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1">Nama Lengkap</label>
-                        <input type="text" id="asp-nama" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm" placeholder="Bpk. Budi Santoso" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1">RT Berapa</label>
-                        <input type="text" id="asp-rt" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm" placeholder="Contoh: 05" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1">Kategori</label>
-                        <select id="asp-kategori" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm">
-                            <option>Administrasi Surat</option>
-                            <option>Laporan Keamanan</option>
-                            <option>Usulan Pembangunan</option>
-                            <option>Lainnya</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1">Pesan / Detail</label>
-                        <textarea id="asp-pesan" rows="4" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm" placeholder="Tulis pesan anda disini..." required></textarea>
-                    </div>
-                    <button type="submit" id="btn-submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1 hover:scale-[1.02]">
-                        Kirim Pesan
-                    </button>
-                    <p id="form-status" class="text-center text-sm hidden"></p>
-                </form>
-            </div>
-        </div>
-
-        <!-- Large Interactive Map Section -->
-        <div class="mt-20 scroll-reveal">
-            <h2 class="text-3xl font-bold text-primary mb-8 text-center">Lokasi Sekretariat RW 16</h2>
-            <div class="bg-gray-200 rounded-2xl overflow-hidden shadow-lg border-4 border-white h-96">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15866.42999557404!2d106.8105747!3d-6.192444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f6a73c091937%3A0x6280436815349f7e!2sKebon%20Melati%2C%20Tanah%20Abang%2C%20Central%20Jakarta%20City%2C%20Jakarta!5e0!3m2!1sen!2sid!4v1703000000000!5m2!1sen!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-            <p class="text-center text-gray-500 mt-4">Klik peta untuk melihat rute di Google Maps.</p>
-        </div>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-extrabold text-primary mb-4">
+        Hubungi Sekretariat
+      </h1>
+      <p class="text-xl text-gray-600">
+        Sampaikan aspirasi, aduan, atau kebutuhan administrasi Anda.
+      </p>
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Contact Info -->
+      <div class="space-y-8">
+        <div class="bg-white p-8 rounded-xl shadow-md">
+          <h3 class="text-xl font-bold text-primary mb-4">Informasi Kontak</h3>
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <span class="font-bold w-24 text-gray-500">Alamat:</span>
+              <p id="contact-address" class="text-gray-800 font-medium"></p>
+            </div>
+            <div class="flex items-start">
+              <span class="font-bold w-24 text-gray-500">Email:</span>
+              <p id="contact-email" class="text-accent font-medium"></p>
+            </div>
+            <div class="flex items-start">
+              <span class="font-bold w-24 text-gray-500">Telepon:</span>
+              <p id="contact-phone" class="text-gray-800 font-medium"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-primary text-white p-8 rounded-xl shadow-md">
+          <h3 class="text-xl font-bold mb-4">Jam Pelayanan</h3>
+          <ul class="space-y-2 text-blue-200">
+            <li class="flex justify-between">
+              <span>Senin - Jumat</span> <span>19:30 - 22:00</span>
+            </li>
+            <li class="flex justify-between">
+              <span>Sabtu - Minggu</span> <span>Libur</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div
+        class="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-300"
+      >
+        <div
+          class="absolute top-0 right-0 w-24 h-24 bg-accent/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-accent/20 transition-all"
+        ></div>
+
+        <h3
+          class="text-2xl font-bold text-primary mb-6 relative z-10 border-l-4 border-accent pl-4"
+        >
+          Formulir Aspirasi Warga
+        </h3>
+        <form id="aspiration-form" class="space-y-6 relative z-10">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1"
+              >Nama Lengkap</label
+            >
+            <input
+              type="text"
+              id="asp-nama"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm"
+              placeholder="Bpk. Budi Santoso"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1"
+              >Nomor WhatsApp</label
+            >
+            <input
+              type="tel"
+              id="asp-whatsapp"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm"
+              placeholder="Contoh: 0812xxxx"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1"
+              >RT Berapa</label
+            >
+            <input
+              type="text"
+              id="asp-rt"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm"
+              placeholder="Contoh: 05"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1"
+              >Kategori</label
+            >
+            <select
+              id="asp-kategori"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm"
+            >
+              <option>Administrasi Surat</option>
+              <option>Laporan Keamanan</option>
+              <option>Usulan Pembangunan</option>
+              <option>Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1 ml-1"
+              >Pesan / Detail</label
+            >
+            <textarea
+              id="asp-pesan"
+              rows="4"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all shadow-sm"
+              placeholder="Tulis pesan anda disini..."
+              required
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            id="btn-submit"
+            class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1 hover:scale-[1.02]"
+          >
+            Kirim Pesan
+          </button>
+          <p id="form-status" class="text-center text-sm hidden"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Large Interactive Map Section -->
+    <div class="mt-20 scroll-reveal">
+      <h2 class="text-3xl font-bold text-primary mb-8 text-center">
+        Lokasi Sekretariat RW 16
+      </h2>
+      <div
+        class="bg-gray-200 rounded-2xl overflow-hidden shadow-lg border-4 border-white h-96"
+      >
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15866.42999557404!2d106.8105747!3d-6.192444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f6a73c091937%3A0x6280436815349f7e!2sKebon%20Melati%2C%20Tanah%20Abang%2C%20Central%20Jakarta%20City%2C%20Jakarta!5e0!3m2!1sen!2sid!4v1703000000000!5m2!1sen!2sid"
+          width="100%"
+          height="100%"
+          style="border: 0"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+      <p class="text-center text-gray-500 mt-4">
+        Klik peta untuk melihat rute di Google Maps.
+      </p>
+    </div>
+  </div>
 </div>
