@@ -47,7 +47,8 @@ export const requestService = {
     const attachments: string[] = [];
     if (files.length > 0) {
       for (const file of files) {
-        const path = await this.uploadDocument(file, user.id);
+        // Pass serviceTypeId to organize files by service
+        const path = await this.uploadDocument(file, user.id, serviceTypeId);
         if (path) attachments.push(path);
       }
     }
@@ -69,15 +70,16 @@ export const requestService = {
     return data;
   },
 
-  async uploadDocument(file: File, userId: string) {
+  async uploadDocument(file: File, userId: string, serviceTypeId: number) {
     const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}_${Math.random()
       .toString(36)
       .substr(2, 9)}.${fileExt}`;
-    const filePath = `${userId}/${fileName}`;
+    // Structure: {userId}/{serviceId}/{fileName}
+    const filePath = `${userId}/${serviceTypeId}/${fileName}`;
 
     const { data, error } = await supabase.storage
-      .from("documents")
+      .from("requests") // Changed from 'documents' to 'requests'
       .upload(filePath, file);
 
     if (error) throw new Error(`Upload failed: ${error.message}`);

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { servicesData } from "@/data/models";
+// Remove servicesData import
+// import { servicesData } from "@/data/models";
 import { authService } from "@/services/authService";
 import { requestService, RequestItem } from "@/services/requestService";
 import { User } from "@supabase/supabase-js";
@@ -18,12 +19,22 @@ import {
 import { PlusCircle } from "lucide-react";
 import RequestForm from "./RequestForm";
 
+// Define ServiceType interface here or import it (if shared)
+interface ServiceType {
+  id: number;
+  title: string; // The UI code uses title, but DB likely returns 'name'. We need to map or adapt.
+  name?: string; // DB column
+  description: string;
+  requirements: string[] | string;
+}
+
 export default function ServicesList() {
   const [activeTab, setActiveTab] = useState<"list" | "history" | "create">(
     "list"
   );
   const [user, setUser] = useState<User | null>(null);
   const [requests, setRequests] = useState<RequestItem[]>([]);
+  const [services, setServices] = useState<ServiceType[]>([]);
 
   useEffect(() => {
     authService.getUser().then(async (u) => {
@@ -32,7 +43,24 @@ export default function ServicesList() {
         loadRequests();
       }
     });
+
+    loadServices();
   }, []);
+
+  const loadServices = async () => {
+    try {
+      const data: any[] = await requestService.getServiceTypes();
+      // Map DB 'name' to UI 'title' if needed, or update UI to use 'name'
+      const mapped = data.map((s) => ({
+        ...s,
+        title: s.name, // Map name to title for compatibility
+        requirements: s.requirements || [],
+      }));
+      setServices(mapped);
+    } catch (e) {
+      console.error("Failed loading services", e);
+    }
+  };
 
   const loadRequests = async () => {
     try {
@@ -178,7 +206,14 @@ export default function ServicesList() {
 
         {activeTab === "list" && (
           <div className="space-y-6 animate-fade-in">
-            {servicesData.services.map((service) => (
+            {services.length === 0 && (
+              <div className="text-center py-10 bg-gray-50 rounded-lg">
+                <p className="text-gray-500">
+                  Memuat layanan atau belum ada layanan tersedia...
+                </p>
+              </div>
+            )}
+            {services.map((service) => (
               <div
                 key={service.id}
                 className="bg-white p-6 rounded-xl shadow-sm border border-neutral-border hover:shadow-md transition-shadow"
@@ -186,7 +221,7 @@ export default function ServicesList() {
                 <div className="flex flex-col md:flex-row justify-between md:items-start gap-4">
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-primary mb-2">
-                      {service.title}
+                      {service.title || service.name}
                     </h3>
                     <p className="text-gray-600 mb-4">{service.description}</p>
                     <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
@@ -194,9 +229,14 @@ export default function ServicesList() {
                         Persyaratan:
                       </p>
                       <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
-                        {service.requirements.map((req, i) => (
-                          <li key={i}>{req}</li>
-                        ))}
+                        {Array.isArray(service.requirements) ? (
+                          service.requirements.map((req, i) => (
+                            <li key={i}>{req}</li>
+                          ))
+                        ) : (
+                          // Handle if requirement is string or empty
+                          <li>{String(service.requirements)}</li>
+                        )}
                       </ul>
                     </div>
                   </div>

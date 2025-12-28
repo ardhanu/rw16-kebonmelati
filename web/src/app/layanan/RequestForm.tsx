@@ -21,7 +21,7 @@ interface RequestFormProps {
 interface ServiceType {
   id: number;
   name: string;
-  requirements: string;
+  requirements: string | string[];
 }
 
 export default function RequestForm({ onCancel, onSuccess }: RequestFormProps) {
@@ -163,7 +163,11 @@ export default function RequestForm({ onCancel, onSuccess }: RequestFormProps) {
             <option value="">-- Pilih Layanan --</option>
             {serviceTypes.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.name} (Syarat: {t.requirements})
+                {t.name} (Syarat:{" "}
+                {Array.isArray(t.requirements)
+                  ? t.requirements.join(", ")
+                  : t.requirements}
+                )
               </option>
             ))}
           </select>

@@ -42,7 +42,25 @@ export const authService = {
         },
       },
     });
+
     if (error) throw error;
+
+    // Sync to public.profiles as required by Admin Dashboard
+    if (data.user) {
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: data.user.id,
+        full_name: fullname,
+        role: "user",
+        updated_at: new Date().toISOString(),
+      });
+
+      // If profile creation fails, we should probably warn or handle it,
+      // but for now we log it. Note: RLS policies must allow insert.
+      if (profileError) {
+        console.error("Failed to create user profile:", profileError);
+      }
+    }
+
     return data;
   },
 
